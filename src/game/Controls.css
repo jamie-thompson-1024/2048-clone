@@ -1,0 +1,17 @@
+
+.controls {
+
+}
+
+.tileThemeSelect label div {
+    width: 5rem;
+    height: 1.5rem;
+
+    border-radius: 5px;
+}
+
+.tileThemeSelect label {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
