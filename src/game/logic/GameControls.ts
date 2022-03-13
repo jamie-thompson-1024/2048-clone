@@ -2,7 +2,7 @@
 type Direction = 'up' | 'right' | 'down' | 'left';
 interface GameInputEvent {
     code?: string,
-    direction: Direction
+    direction?: Direction
 };
 
 class GameControls extends EventTarget
@@ -61,7 +61,7 @@ class GameControls extends EventTarget
     keyInputHandler(ev: KeyboardEvent)
     {
         let { code } = ev;
-        
+
         if(this.bindings[code])
             this.dispatchEvent(
                 new CustomEvent<GameInputEvent>('gameInput', {
