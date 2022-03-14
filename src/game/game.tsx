@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './game.css';
 
 import Controls from './Controls';
@@ -22,38 +22,52 @@ function grid2Togrid1(grid2: number[][])
 
 function Game() {
 
-    const [gameLogic] = useState(new GameLogic());
+    const [gameLogic, setGameLogic] = useState<GameLogic>();
 
-    const [grid, setGrid] = useState<number[]>(grid2Togrid1(gameLogic.grid));
-    const [[width, height], setSize] = useState<[number, number]>([gameLogic.width, gameLogic.height]);
+    const [grid, setGrid] = useState<number[]>();
+    const [size, setSize] = useState<[number, number]>();
+    const [width, height] = size ?? [5,5];
+
+    useEffect(() => {
+        let game = new GameLogic();
+        setGameLogic(game);
+        setGrid(grid2Togrid1(game.grid));
+        setSize([game.width, game.height]);
+    }, []);
 
     // attach game grid element to game logic for touch events
     const gameSpace = useRef<HTMLDivElement>(null);
     useEffect(() => {
-        let gameSpaceElement = gameSpace.current;
-        if(gameSpaceElement)
-            gameLogic.attachElement(gameSpaceElement);
-        return () => {
+        if(gameLogic)
+        {
+            let gameSpaceElement = gameSpace.current;
             if(gameSpaceElement)
-                gameLogic.detachElement(gameSpaceElement);
+                gameLogic.attachElement(gameSpaceElement);
+            return () => {
+                if(gameSpaceElement)
+                    gameLogic.detachElement(gameSpaceElement);
+            }
         }
     }, [gameLogic, gameSpace]);
 
     // attach grid display to gamelogic grid data/size changes
     useEffect(() => {
-        const updateGrid = () => {
-            setGrid(grid2Togrid1(gameLogic.grid));
-        }
-        const updateSize = () => {
-            setSize([gameLogic.width, gameLogic.height]);
-        }
+        if(gameLogic)
+        {
+            const updateGrid = () => {
+                setGrid(grid2Togrid1(gameLogic.grid));
+            }
+            const updateSize = () => {
+                setSize([gameLogic.width, gameLogic.height]);
+            }
 
-        gameLogic.addEventListener('resize', updateSize);
-        gameLogic.addEventListener('update', updateGrid);
+            gameLogic.addEventListener('resize', updateSize);
+            gameLogic.addEventListener('update', updateGrid);
 
-        return () => {
-            gameLogic.removeEventListener('resize', updateSize);
-            gameLogic.removeEventListener('update', updateGrid);
+            return () => {
+                gameLogic.removeEventListener('resize', updateSize);
+                gameLogic.removeEventListener('update', updateGrid);
+            }
         }
     }, [gameLogic, setGrid, setSize]);
 
@@ -66,7 +80,7 @@ function Game() {
                     gridTemplateColumns: `repeat(${width}, 1fr)`,
                     gridTemplateRows: `repeat(${height}, 1fr)`
                 }}>
-                    { grid.map((value, i) => 
+                    { grid?.map((value, i) => 
                         <Tile value={value} key={i} />
                     )}
             </div>

@@ -21,15 +21,19 @@ class GameControls extends EventTarget
     };
 
     keyHandler = this.keyInputHandler.bind(this);
+    keyUpHandler = this.keyUpInputHandler.bind(this);
     touchHandler = this.touchInputHandler.bind(this);
 
     els: HTMLElement[] = [];
+
+    blockKeyInput = false;
 
     constructor()
     {
         super();
 
         window.addEventListener('keydown', this.keyHandler);
+        window.addEventListener('keyup', this.keyUpHandler);
     }
 
     attachElement(el: HTMLElement)
@@ -56,19 +60,29 @@ class GameControls extends EventTarget
         this.els = [];
 
         window.removeEventListener('keydown', this.keyHandler);
+        window.removeEventListener('keyup', this.keyUpHandler);
+    }
+
+    keyUpInputHandler()
+    {
+        this.blockKeyInput = false;
     }
 
     keyInputHandler(ev: KeyboardEvent)
     {
         let { code } = ev;
 
-        if(this.bindings[code])
+        if(this.bindings[code] && !this.blockKeyInput)
+        {
+            this.blockKeyInput = true;
             this.dispatchEvent(
                 new CustomEvent<GameInputEvent>('gameInput', {
                     detail: {
                         code, 
                         direction: this.bindings[code]
-                    }}));
+                    }
+                }));
+        }
     }
 
     touchInputHandler(ev: TouchEvent)

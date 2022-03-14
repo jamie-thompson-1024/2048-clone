@@ -9,6 +9,9 @@ const tileThemes = [
 
 function Controls() {
 
+    const [widthInput, setWidthInput] = useState<number | string>(5);
+    const [heightInput, setHeightInput] = useState<number | string>(5);
+
     const [tileTheme, setTileTheme] = useState(0);
     const dispatch = useDispatch();
 
@@ -17,6 +20,10 @@ function Controls() {
         setTileTheme(value);
         dispatch({ type: 'setTileTheme', payload: tileThemes[value] });
     }, [setTileTheme, dispatch]);
+
+    const resizeGame = useCallback(() => {
+
+    }, []);
 
     return (
         <div className="controls">
@@ -37,6 +44,31 @@ function Controls() {
                         </label>
                     );
                 })}
+            </fieldset>
+            <fieldset className="gameOptions">
+                    <legend>Game Options</legend>
+                    <button>Reset</button>
+                    <label htmlFor="gameOptions-widthInput">
+                        Width:
+                        <input 
+                            id="gameOptions-widthInput" 
+                            onChange={(ev) => { 
+                                setWidthInput(ev.target.value) 
+                            }} 
+                            value={widthInput}
+                            type="number"></input>
+                    </label>
+                    <label htmlFor="gameOptions-heightInput">
+                        Height:
+                        <input 
+                            id="gameOptions-heightInput" 
+                            onChange={(ev) => { 
+                                setHeightInput(ev.target.value) 
+                            }} 
+                            value={heightInput}
+                            type="number"></input>
+                    </label>
+                    <button onClick={resizeGame}>Resize</button>
             </fieldset>
         </div>
     )
