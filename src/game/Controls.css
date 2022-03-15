@@ -1,6 +1,71 @@
 
 .controls {
+    display: grid;
+    gap: 10px;
+    grid-auto-flow: column;
 
+    font-size: 1.3em;
+}
+
+.controls > * {
+    align-self: flex-start;
+}
+
+@media (min-width: 45em) {
+    .controls {
+        grid-auto-flow: row;
+    }
+}
+
+.controls fieldset {
+    border: 2px solid #333333;
+    border-radius: 5px;
+    font-weight: 700;
+    width: fit-content;
+}
+
+.controls .gameOptions {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.controls .gameOptions .gameControlsInput {
+    display: flex;
+    gap: 5px;
+}
+
+.controls .gameOptions .sizeInputs {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+}
+
+.controls button:hover {
+    background-color: #33333333;
+}
+
+.controls input[type='number'] {
+    float: right;
+    margin-left: 10px;
+    width: 8em;
+
+    font: inherit;
+
+    border: 2px solid #333333;
+    border-radius: 5px;
+}
+
+.controls button {
+    background-color: transparent;
+    border: 2px solid #333333;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+.controls .symbolButton {
+    font-size: 1.6em;
 }
 
 .tileThemeSelect label div {

@@ -55,20 +55,12 @@ class GameLogic extends GameControls
     }
 
     resize(newWidth: number, newHeight: number)
-    {
-        let newGrid: number[][] = [];
-        for(let y = 0; y < this.height; y++)
-        {
-            newGrid.push([]);
-            for(let x = 0; x < this.width; x++)
-            {
-                newGrid[y].push(0);
-            }
-        }
-        
-        this.grid = newGrid;
+    {   
         this.width = newWidth;
         this.height = newHeight;
+
+        this.wipeGrid();
+        this.newTile();
 
         this.dispatchEvent(new Event('resize'));
         this.dispatchEvent(new Event('update'));
@@ -93,6 +85,9 @@ class GameLogic extends GameControls
 
     slideGrid(dir: Direction)
     {
+
+        let spawnNewTile = false;
+
         switch(dir)
         {
             case 'down':
@@ -114,6 +109,7 @@ class GameLogic extends GameControls
                             }
                             if(moveTo) 
                             {
+                                spawnNewTile = true;
                                 this.grid[moveTo[1]][moveTo[0]] += this.grid[y][x];
                                 this.grid[y][x] = 0;
                             }
@@ -138,6 +134,7 @@ class GameLogic extends GameControls
                             }
                             if(moveTo) 
                             {
+                                spawnNewTile = true;
                                 this.grid[moveTo[1]][moveTo[0]] += this.grid[y][x];
                                 this.grid[y][x] = 0;
                             }
@@ -162,6 +159,7 @@ class GameLogic extends GameControls
                             }
                             if(moveTo) 
                             {
+                                spawnNewTile = true;
                                 this.grid[moveTo[1]][moveTo[0]] += this.grid[y][x];
                                 this.grid[y][x] = 0;
                             }
@@ -186,6 +184,7 @@ class GameLogic extends GameControls
                             }
                             if(moveTo) 
                             {
+                                spawnNewTile = true;
                                 this.grid[moveTo[1]][moveTo[0]] += this.grid[y][x];
                                 this.grid[y][x] = 0;
                             }
@@ -193,7 +192,8 @@ class GameLogic extends GameControls
                 break;
         }
 
-        this.newTile();
+        if(spawnNewTile)
+            this.newTile();
         
         this.dispatchEvent(new Event('update'));
     }

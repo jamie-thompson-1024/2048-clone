@@ -1,13 +1,14 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import './Controls.css';
+import GameLogic from "./logic/GameLogic";
 
 const tileThemes = [
     [60, 0],
     [300, 180]
 ];
 
-function Controls() {
+function Controls( props: { game?: GameLogic } ) {
 
     const [widthInput, setWidthInput] = useState<number | string>(5);
     const [heightInput, setHeightInput] = useState<number | string>(5);
@@ -22,8 +23,14 @@ function Controls() {
     }, [setTileTheme, dispatch]);
 
     const resizeGame = useCallback(() => {
+        let width = typeof widthInput === 'string' ? parseInt(widthInput) : widthInput;
+        let height = typeof heightInput === 'string' ? parseInt(heightInput) : heightInput;
+        props.game && props.game.resize(width, height);
+    }, [props.game, widthInput, heightInput]);
 
-    }, []);
+    const resetGame = useCallback(() => {
+        props.game && props.game.resetGame();
+    }, [props.game]);
 
     return (
         <div className="controls">
@@ -47,28 +54,32 @@ function Controls() {
             </fieldset>
             <fieldset className="gameOptions">
                     <legend>Game Options</legend>
-                    <button>Reset</button>
-                    <label htmlFor="gameOptions-widthInput">
-                        Width:
-                        <input 
-                            id="gameOptions-widthInput" 
-                            onChange={(ev) => { 
-                                setWidthInput(ev.target.value) 
-                            }} 
-                            value={widthInput}
-                            type="number"></input>
-                    </label>
-                    <label htmlFor="gameOptions-heightInput">
-                        Height:
-                        <input 
-                            id="gameOptions-heightInput" 
-                            onChange={(ev) => { 
-                                setHeightInput(ev.target.value) 
-                            }} 
-                            value={heightInput}
-                            type="number"></input>
-                    </label>
-                    <button onClick={resizeGame}>Resize</button>
+                    <div className="sizeInputs">
+                        <label htmlFor="gameOptions-widthInput">
+                            Width:
+                            <input 
+                                id="gameOptions-widthInput" 
+                                onChange={(ev) => { 
+                                    setWidthInput(ev.target.value) 
+                                }} 
+                                value={widthInput}
+                                type="number"></input>
+                        </label>
+                        <label htmlFor="gameOptions-heightInput">
+                            Height:
+                            <input 
+                                id="gameOptions-heightInput" 
+                                onChange={(ev) => { 
+                                    setHeightInput(ev.target.value) 
+                                }} 
+                                value={heightInput}
+                                type="number"></input>
+                        </label>
+                    </div>
+                    <div className="gameControlsInput">
+                        <button onClick={resizeGame}>Resize</button>
+                        <button onClick={resetGame} className="symbolButton">↺</button>
+                    </div>
             </fieldset>
         </div>
     )

@@ -5,4 +5,14 @@
   padding: 1em;
 
   font-family: monospace;
+  color: #333333;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+* {
+  font-family: inherit;
+  color: inherit;
 }

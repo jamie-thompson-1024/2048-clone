@@ -28,6 +28,7 @@ function Game() {
     const [size, setSize] = useState<[number, number]>();
     const [width, height] = size ?? [5,5];
 
+    // create game instance once
     useEffect(() => {
         let game = new GameLogic();
         setGameLogic(game);
@@ -78,13 +79,14 @@ function Game() {
                 ref={gameSpace}
                 style={{
                     gridTemplateColumns: `repeat(${width}, 1fr)`,
-                    gridTemplateRows: `repeat(${height}, 1fr)`
+                    gridTemplateRows: `repeat(${height}, 1fr)`,
+                    aspectRatio: `${width} / ${height}`
                 }}>
                     { grid?.map((value, i) => 
                         <Tile value={value} key={i} />
                     )}
             </div>
-            <Controls />
+            <Controls game={gameLogic} />
         </div>
     )
 }
